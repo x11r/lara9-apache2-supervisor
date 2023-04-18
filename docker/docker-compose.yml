@@ -1,0 +1,33 @@
+version: "3.8"
+
+volumes:
+  lara9apacheDB:
+
+services:
+  app:
+    build: php
+    volumes:
+      - ../src:/var/www/html
+      - ./php/000-default.conf:/etc/apache2/sites-available/000-default.conf
+    ports:
+      - "8014:80"
+    environment:
+      TZ: "Asia/Tokyo"
+    depends_on:
+      - db
+  db:
+    image: mariadb:10.5
+    volumes:
+      - lara9apacheDB:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PORT: ${DB_PORT}
+      TZ: Asia/Tokyo
+    ports:
+      - "13310:3306"
+#    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+
